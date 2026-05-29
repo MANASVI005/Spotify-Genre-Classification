@@ -1,0 +1,47 @@
+
+MUSIC GENRE CLASSIFICATION - APPROACH REPORT
+Participant:Manasvi Sachin Banthiya
+Date: April 2026
+Final OOF Accuracy: 0.9498
+
+1. DATA PREPROCESSING
+- Removed duplicate track_ids
+- Converted explicit column True/False to 1/0
+- Filled numeric nulls with median, categorical with unknown
+- Clipped outliers: tempo (30-250), loudness (-60 to 5), duration_ms (10k-600k)
+- Clipped all audio features to range [0, 1]
+- Lowercased and removed special characters from text columns
+
+2. FEATURE ENGINEERING
+- Ratio features: energy/danceability, tempo*energy, valence*energy
+- Mood features: emotional_intensity, mood_score
+- Binary flags: is_rap, is_acoustic, is_instrumental, is_live
+- Bucket features: tempo_bucket, energy_bucket, duration_cat, popularity_bucket
+- Proxy features: dance_pop_proxy, hiphop_proxy, harmonic_complexity
+
+3. FEATURE REPRESENTATION
+- TF-IDF (3000 features) on track_name + artists + album_name
+- StandardScaler on all numeric features
+- Final matrix: numeric + TF-IDF stacked using scipy hstack
+
+4. MODEL
+- Algorithm: LightGBM (LGBMClassifier)
+- Cross-validation: StratifiedKFold (3 folds)
+- Hyperparameter tuning: Optuna (20 trials)
+- Early stopping: 50 rounds
+
+5. EVALUATION (Out-of-Fold - No Data Leakage)
+- Fold 1: 0.9493
+- Fold 2: 0.9507
+- Fold 3: 0.9493
+- Final OOF Accuracy : 0.9498
+- Accuracy  (weighted): 0.9498
+- Precision (weighted): 0.9311
+- F1 Score  (weighted): 0.9402
+
+6. FILES SUBMITTED
+- notebook.ipynb       : Complete pipeline
+- trained_model.pkl    : Saved LightGBM model
+- submission.csv       : Test set predictions
+- report.txt           : This file
+- confusion_matrix.png : Confusion matrix plot
